@@ -6,11 +6,11 @@
 	<display-name>Archetype Created Web Application</display-name>
 	<context-param>
 		<param-name>authority</param-name>
-		<param-value>https://login.windows.net/</param-value>
+		<param-value>https://login.microsoftonline.com/</param-value>
 	</context-param>
 	<context-param>
 		<param-name>tenant</param-name>
-		<param-value>YOUR_TENANT_NAME</param-value>
+		<param-value>common</param-value>
 	</context-param>
 
 	<filter>
@@ -18,11 +18,11 @@
 		<filter-class>com.microsoft.aad.adal4jsample.BasicFilter</filter-class>
 		<init-param>
 			<param-name>client_id</param-name>
-			<param-value>YOUR_CLIENT_ID</param-value>
+			<param-value>[CLIENT ID FROM AZURE PORTAL]</param-value>
 		</init-param>
 		<init-param>
 			<param-name>secret_key</param-name>
-			<param-value>YOUR_CLIENT_SECRET</param-value>
+			<param-value>[KEY FROM AZURE PORTAL]</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
