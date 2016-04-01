@@ -154,7 +154,7 @@ public class BasicFilter implements Filter {
             context = new AuthenticationContext(authority + tenant + "/", true,
                     service);
             Future<AuthenticationResult> future = context.acquireToken(
-                    "https://graph.windows.net", new ClientCredential(clientId,
+                    "https://graph.windows.com", new ClientCredential(clientId,
                             clientSecret), null);
             result = future.get();
         } catch (ExecutionException e) {
@@ -236,12 +236,21 @@ public class BasicFilter implements Filter {
 
     private String getRedirectUrl(String currentUri)
             throws UnsupportedEncodingException {
+    	
+    	String scope = "https://graph.microsoft.co/User.Read https://graph.microsoft.co/Directory.Read.All https://graph.microsoft.co/Calendar.Read https://graph.microsoft.co/Calendar.Write";
+    	
         String redirectUrl = authority
                 + this.tenant
-                + "/oauth2/authorize?response_type=code%20id_token&scope=openid&response_mode=form_post&redirect_uri="
+                + "/oauth2/authorize?response_type=code%20id_token&"
+                + URLEncoder.encode(scope, "UTF-8") + "&response_mode=form_post&redirect_uri="
                 + URLEncoder.encode(currentUri, "UTF-8") + "&client_id="
-                + clientId + "&resource=https%3a%2f%2fgraph.windows.net"
+                + clientId + "&resource=https%3a%2f%2fgraph.microsoft.com"
                 + "&nonce=" + UUID.randomUUID() + "&site_id=500879";
+//        String redirectUrl = authority
+//                + this.tenant
+//                + "/oauth2/authorize?response_type=code&redirect_uri="
+//                + URLEncoder.encode(currentUri, "UTF-8") + "&client_id="
+//                + clientId;
         return redirectUrl;
     }
 

@@ -19,6 +19,8 @@ Getting started with the sample is easy. It is configured to run out of the box 
 
 To use this sample you will need a Azure Active Directory Tenant. If you're not sure what a tenant is or how you would get one, read [What is an Azure AD tenant](http://technet.microsoft.com/library/jj573650.aspx)? or [Sign up for Azure as an organization](http://azure.microsoft.com/documentation/articles/sign-up-organization/). These docs should get you started on your way to using Azure AD.
 
+The permission scopes used in this example require that the logged in user be an Admin in the Tenant. If not, you will receive a message indicating that the principle permissions cannot be accepted by the user.
+
 ### Step 2: Download Java (7 and above) for your platform 
 
 To successfully use this sample, you need a working installation of [Java](http://www.oracle.com/technetwork/java/javase/downloads/index.html) and [Maven](https://maven.apache.org).

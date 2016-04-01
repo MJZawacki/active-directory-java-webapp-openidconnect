@@ -19,6 +19,7 @@
  ******************************************************************************/
 package com.microsoft.aad.adal4jsample;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -52,23 +53,25 @@ public class AadController {
                         .getInitParameter("tenant"));
                 model.addAttribute("users", data);
             } catch (Exception e) {
-                model.addAttribute("error", e);
+                model.addAttribute("error", e.getMessage());
                 return "/error";
             }
         }
         return "/secure/aad";
     }
 
+    // User must be an admin to use this API
     private String getUsernamesFromGraph(String accessToken, String tenant) throws Exception {
-        URL url = new URL(String.format("https://graph.windows.net/%s/users?api-version=2013-04-05", tenant,
+        URL url = new URL(String.format("https://graph.microsoft.com/v1.0/users", tenant,
                 accessToken));
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         // Set the appropriate header fields in the request header.
-        conn.setRequestProperty("api-version", "2013-04-05");
-        conn.setRequestProperty("Authorization", accessToken);
-        conn.setRequestProperty("Accept", "application/json;odata=minimalmetadata");
-        String goodRespStr = HttpClientHelper.getResponseStringFromConn(conn, true);
+        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+        conn.setRequestProperty("Accept", "application/json");
+
+        	String goodRespStr = HttpClientHelper.getResponseStringFromConn(conn, true);
+
         // logger.info("goodRespStr ->" + goodRespStr);
         int responseCode = conn.getResponseCode();
         JSONObject response = HttpClientHelper.processGoodRespStr(responseCode, goodRespStr);
@@ -86,5 +89,33 @@ public class AadController {
         }
         return builder.toString();
     }
+    
+    // This does not require Admin Role to use
+    private String getMyUserInfoFromGraph(String accessToken, String tenant) throws Exception {
 
+      URL url = new URL(String.format("https://graph.microsoft.com/v1.0/me", tenant,
+      accessToken));
+    	
+        
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // Set the appropriate header fields in the request header.
+        conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+        conn.setRequestProperty("Accept", "application/json");
+        String goodRespStr = HttpClientHelper.getResponseStringFromConn(conn, true);
+        // logger.info("goodRespStr ->" + goodRespStr);
+        int responseCode = conn.getResponseCode();
+        JSONObject response = HttpClientHelper.processGoodRespStr(responseCode, goodRespStr);
+     
+
+        JSONObject userObj = JSONHelper.fetchDirectoryObjectJSONObject(response);
+
+        StringBuilder builder = new StringBuilder();
+
+        User user = new User();
+        JSONHelper.convertJSONObjectToDirectoryObject(userObj, user);
+        builder.append(user.getUserPrincipalName() + "<br/>");
+       
+        return builder.toString();
+    }
+    
 }
